@@ -1,0 +1,19 @@
+[Unit]
+Description=GPU-aware fan demand endpoint for Cisco CIMC
+After=network-online.target nvidia-persistenced.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/libexec/cisco-v100-gpu-fan-demand
+User=root
+Group=root
+Restart=always
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

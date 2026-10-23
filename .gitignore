@@ -1,0 +1,8 @@
+# Runtime artifacts (the controller log lives in /tmp on the CIMC)
+*.log
+*.pid
+*.tmp
+
+# Do not commit CIMC credentials, session material, or exploit helpers
+secrets/
+*.secret
