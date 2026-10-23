@@ -63,6 +63,27 @@ The controller files live on the CIMC's persistent JFFS2 flash (`/mnt/jffs2`).
 Point the CIMC controller at this host by setting `GPU_DEMAND_URL` at the top of
 `cimc/custom-fan-curve.sh` to `http://<host-ip>/duty`.
 
+## Freeing stuck CIMC SSH sessions (`tools/`)
+
+CIMC allows only a few concurrent user sessions (around four), and SSH
+sessions from the install/exploit flow or dropped clients can linger and
+exhaust the pool, locking you out. `tools/drop-cimc-sessions.sh` runs from
+an admin workstation (not on the CIMC), SSHes into the CIMC CLI, lists the
+open user sessions, and terminates the ones CIMC marks `Killable`. Your own
+current session is never Killable, so it is left alone.
+
+```sh
+# List only, change nothing:
+DRY_RUN=1 tools/drop-cimc-sessions.sh
+
+# Terminate stale (Killable) sessions:
+CIMC_HOST=192.168.1.105 CIMC_USER=admin tools/drop-cimc-sessions.sh
+```
+
+Configure via `CIMC_HOST`, `CIMC_USER`, and `CIMC_SSH_OPTS` (e.g.
+`-i ~/.ssh/cimc_key`). It is best-effort: it can only connect while at least
+one session slot is still free.
+
 ## Safety notes
 
 - Never commit the CIMC password or session material.
